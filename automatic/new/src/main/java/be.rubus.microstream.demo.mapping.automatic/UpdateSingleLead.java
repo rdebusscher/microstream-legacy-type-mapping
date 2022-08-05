@@ -9,18 +9,17 @@ public class UpdateSingleLead {
 
     public static void main(String[] args) {
 
-        // Initialize a storage manager ("the database") with the given directory and defaults for everything else.
         try (StorageManager storageManager = EmbeddedStorage.start(Paths.get("data"))) {
 
 
             Root root = (Root) storageManager.root();
             if (root == null) {
-                throw new IllegalStateException("Run the 'old-Leads' program first, no data in storage.");
+                throw new IllegalStateException("Run the 'oldLeadsProgram' program first, no data in storage.");
             }
 
             root.updateNote("r.debusscher@microstream.one", "new note content");
-            System.out.println("Update note for Rudy");
-            System.out.println("You can still run 'old-Leads' and 'new-ShowLeads'");
+            System.out.println("Updated note for Rudy");
+            System.out.println("You can still run 'oldLeadsProgram' and 'newLeadsProgram'");
         }
 
     }

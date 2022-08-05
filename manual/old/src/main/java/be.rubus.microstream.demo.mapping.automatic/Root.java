@@ -15,11 +15,11 @@ public class Root {
         this.persister = persister;
     }
 
-    public List<Contact> getLeads() {
+    public List<Contact> getContacts() {
         return contacts;
     }
 
-    public void addLead(Contact contact) {
+    public void addContact(Contact contact) {
         contacts.add(contact);
         persister.store(contacts);
     }

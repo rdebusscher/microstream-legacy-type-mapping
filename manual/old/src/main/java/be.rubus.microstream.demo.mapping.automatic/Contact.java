@@ -7,7 +7,6 @@ public class Contact {
     private final String name;
     private final String email;
     private final String note;
-
     private final String postalCode;
 
     private final String city;

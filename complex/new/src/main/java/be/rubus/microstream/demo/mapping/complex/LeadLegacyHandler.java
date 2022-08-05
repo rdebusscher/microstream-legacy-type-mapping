@@ -44,17 +44,27 @@ public class LeadLegacyHandler extends BinaryLegacyTypeHandler.AbstractCustom<Le
     @Override
     public void updateState(Binary data, Lead instance, PersistenceLoadHandler handler) {
         String name = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_name));
-        String email = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_name));
-        String note = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_name));
-        String postalCode = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_name));
-        String city = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_name));
+        String email = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_email));
+        String note = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_note));
+        String postalCode = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_postalCode));
+        String city = (String) handler.lookupObject(data.read_long(BINARY_OFFSET_city));
 
         instance.setContactName(name);
         instance.setEmail(email);
         instance.setNote(note);
         Address address = new Address();
+
+        String[] parts = postalCode.split("-");
+        if (parts.length == 2) {
+            Country country = new Country();
+            country.setCode(parts[0]);
+            address.setCountry(country);
+
+            postalCode = parts[1];
+        }
         address.setPostalCode(postalCode);
         address.setCity(city);
+
         instance.setAddress(address);
     }
 

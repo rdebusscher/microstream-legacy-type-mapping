@@ -8,15 +8,20 @@ public class Lead {
     private String contactName;
     private int quality;
     private String note;
-
     private String postalCode;
-
     private String city;
 
-    private Country country = Country.DEFAULT;
+    private Country country = Country.DEFAULT;  // For 'converted' instances this default is not applied (property is null)
+    // This is because MicroStream does not use the Constructor and 'normal' Java instantiation.
+    // It low level creates objects on the heap and assign data and pointers.
+    // The advantage is that there are no security vulnerabilities possible like you have with the standard Java Serialization approach.
 
     public Lead(String email) {
         this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getContactName() {

@@ -10,19 +10,17 @@ public class ConvertStorage {
 
     public static void main(String[] args) {
 
-        // Initialize a storage manager ("the database") with the given directory and defaults for everything else.
         try (StorageManager storageManager = EmbeddedStorage.start(Paths.get("data"))) {
-
 
             Root root = (Root) storageManager.root();
             if (root == null) {
-                throw new IllegalStateException("Run the 'old-Leads' program first, no data in storage.");
+                throw new IllegalStateException("Run the 'oldLeadsProgram' program first, no data in storage.");
             }
             Storer eagerStorer = storageManager.createEagerStorer();
             eagerStorer.store(root);  // Does not write to target.
             eagerStorer.commit();  // This does the save to storage.
 
-            //eagerStorer.store(root.getLeads());  // If you only want to convert the affected instances and recommended for larger datasets.
+            //eagerStorer.store(root.getLeads());  // Better: Only convert the affected instances.
 
             System.out.println("Converted storage to new Lead class format");
 

@@ -8,7 +8,7 @@ public class Address {
 
     private String city;
 
-    private String Country;
+    private Country country;
 
     public String getPostalCode() {
         return postalCode;
@@ -26,12 +26,12 @@ public class Address {
         this.city = city;
     }
 
-    public String getCountry() {
-        return Country;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountry(String country) {
-        Country = country;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Address {
         return new StringJoiner(", ", Address.class.getSimpleName() + "[", "]")
                 .add("postalCode='" + postalCode + "'")
                 .add("city='" + city + "'")
-                .add("Country='" + Country + "'")
+                .add("Country='" + country + "'")
                 .toString();
     }
 }

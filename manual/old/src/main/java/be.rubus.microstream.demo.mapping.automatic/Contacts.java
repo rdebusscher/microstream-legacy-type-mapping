@@ -9,9 +9,7 @@ public class Contacts {
 
     public static void main(String[] args) {
 
-        // Initialize a storage manager ("the database") with the given directory and defaults for everything else.
         try (StorageManager storageManager = EmbeddedStorage.start(Paths.get("data"))) {
-
 
             Root root = (Root) storageManager.root();
             if (root == null) {
@@ -20,18 +18,18 @@ public class Contacts {
                 storageManager.setRoot(root);
                 storageManager.storeRoot();
 
-                initLeads(root);
+                initContacts(root);
             }
 
-            System.out.println("Contents of the storage");
-            root.getLeads().forEach(System.out::println);
+            System.out.println("Contents of the storage - Contacts");
+            root.getContacts().forEach(System.out::println);
         }
 
     }
 
-    private static void initLeads(Root root) {
+    private static void initContacts(Root root) {
 
-        root.addLead(
+        root.addContact(
                 new ContactBuilder()
                         .withName("Markus Kett")
                         .withEmail("m.kett@microstream.one")
@@ -40,7 +38,7 @@ public class Contacts {
                         .withCity("Regensburg")
                         .build()
         );
-        root.addLead(
+        root.addContact(
                 new ContactBuilder()
                         .withName("Rudy De Busscher")
                         .withEmail("r.debusscher@microstream.one")

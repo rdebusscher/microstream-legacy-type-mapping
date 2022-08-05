@@ -5,9 +5,11 @@ import java.util.StringJoiner;
 public class Lead {
 
     private final String email;
-    private String contactName;
+    private String contactName;  // renamed
     private int quality;
     private String note;
+
+    // Removed : property reference
 
     public Lead(String contactName, int quality, String email, String note) {
         this.contactName = contactName;

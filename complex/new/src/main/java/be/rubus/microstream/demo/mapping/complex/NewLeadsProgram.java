@@ -6,7 +6,7 @@ import one.microstream.storage.types.StorageManager;
 
 import java.io.File;
 
-public class ShowLeads {
+public class NewLeadsProgram {
 
     public static void main(String[] args) {
 
@@ -14,7 +14,7 @@ public class ShowLeads {
 
             Root root = (Root) storageManager.root();
             if (root == null) {
-                throw new IllegalStateException("Run the 'old-Leads' program first, no data in storage.");
+                throw new IllegalStateException("Run the 'oldLeadsProgram' program first, no data in storage.");
             }
 
             System.out.println("Contents of the storage");
@@ -23,7 +23,7 @@ public class ShowLeads {
 
     }
 
-    private static EmbeddedStorageFoundation createFoundation() {
+    private static EmbeddedStorageFoundation<?> createFoundation() {
         return EmbeddedStorage.Foundation(new File("data").toPath())
                 .onConnectionFoundation(f ->
                         f.getCustomTypeHandlerRegistry()

@@ -7,9 +7,7 @@ public class Lead {
     private final String name;
     private final String email;
     private final String note;
-
     private final String postalCode;
-
     private final String city;
 
     public Lead(String name, String email, String note, String postalCode, String city) {
@@ -24,7 +22,6 @@ public class Lead {
     public String getName() {
         return name;
     }
-
 
     public String getEmail() {
         return email;

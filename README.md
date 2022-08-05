@@ -4,7 +4,7 @@ Examples of the Legacy Type Mapping of MicroStream
 
 ## Automatic mapping
 
-The MicroStream engine can handle 'small' changes automatically. No action is required from the developer when your data model has small changes.  What are 'small' changes?
+The MicroStream engine can handle 'small' changes automatically. No action is required from the developer when your data model has small changes. What are 'small' changes?
 
 - Rename a property within a class.
 - Add a new property
@@ -22,21 +22,21 @@ private String note;
 private String reference;
 ```
 
-With the class `Leads` you can fill your data target with a few entries and you can print out the contents of it.  Run this program to get started with this example.
+With the class `OldLeadsProgram` you can fill your data target with a few entries and you can print out the contents of it.  Run this program to get started with this example.
 
 In a second version of the program, you realise
 
 - The field _reference_ was not really useful as people use _note- for this anyway.
 - You rename the property _name_ to _contactName_
-- You reorder the fields since it makes more sense that the _email_ field is the first.
+- You reorder the fields since it makes more sense that the _email_ field is the first (identification of the instance).
 
-The code is available in the _new_ module of the project.  You can run the `ShowLeads` class to show the contents of the storage we created with the _old_ version of the program.  Since we only made some _small_ changes, MicroStream has no problem reading the data and showing the List of _Leads_.
+The code is available in the _new_ module of the project.  You can run the `NewLeadsProgram` class to show the contents of the storage we created with the _old_ version of the program.  Since we only made some _small_ changes, MicroStream has no problem reading the data and showing the List of _Lead_'s.
 
 You also notice in the log that it mentions that an automatic Legacy Type Mapping is generated for the second version of our class. The _Type Dictionary_ of the storage can contain multiple versions of the same class with its respective layout of the properties.
 
-If we only read the storage, the data is converted into the new layout into memory (the JVM heap) but the storage contains still the data in the old format.  So if we run the `Leads` program in the _old_ module again, we see that all data is still there, including the value of the _reference_ field.
+If we only read the storage, the data is converted into the new layout into memory (the JVM heap) but the storage contains still the data in the old format.  So if we run the `OldLeadsProgram` program again, we see that all data is still there, including the value of the _reference_ field.
 
-If we change an instance and store it to the storage target, the layout will be the one of the _new_ program.  The update is performed by running the class `UpdateSingleLead`.  We can verify if the update was successful by running the `ShowLeads` program from the _new_ module. But also the old program can still read the data. It detects the new layout of the class and automatically maps it to the old format. This means that for the updated item of the _Lead_ List, the _reference_ field is null now as you can see if you run the `Lead`  program.
+If we change an instance and store it to the storage target, the layout will be the one of the _new_ program.  The update is performed by running the class `UpdateSingleLead`.  We can verify if the update was successful by running the `NewLeadsProgram` program. But also the old program can still read the data. It detects the new layout of the class and automatically maps it to the old format. This means that for the updated item of the _Lead_ List, the _reference_ field is null now as you can see if you run the `OldLeadsProgram` program.
 
 So, MicroStream can handle multiple versions of a class at the same time in the storage target. And it will convert it to the layout of the class it is running for the moment. As long as they are _small_ changes. In the next example, we will see how you as a developer can define the mapping for a larger-scale refactoring or change.
 
@@ -50,19 +50,19 @@ eagerStorer.commit();  // This does the save to storage.
 
 This is done by the program `ConvertStorage` that is available in the _new_ module.
 
-From now on, the `ShowLeads` program does not mention mapping anymore because no data in another format is available than the one the program itself uses. But the old program `Leads` is still able to read the data, just as we did before.
+From now on, the  `NewLeadsProgram` program does not mention mapping anymore because no data in another format is available than the one the program itself uses. But the old program is still able to read the data, just as we did before but without the _reference_ field.
 
 ## Manual Mapping
 
 If the automatic mapping doesn't provide you with the desired result, because the mapping based on the Levenshtein distance for words matches incorrect properties, or you have performed a class name refactoring, you can configure the mapping yourself.
 
-The mapping in this example, see directory _manual_ does not involve creating multiple instances as depicted in this class diagram
+Suppose that in another alternative universe, you first had created your application around `Contacts` and you want to restructure the data to `Leads` and additional instances for address and country.
 
 ![](LegacyTypeMapping.png)
 
-To handle such cases, have a look at the next section called complex and how a _Legacy Type Handler_ can solve this problem.  For now, we use the simpler _Legacy Type Mapping_ functionality of MicroStream.
+The mapping functionality cannot handle this complex restructuring and you need to use a custom handler for that which will be covered in the last example with a _Legacy Type Handler_.
 
-In this manual example, we want to rename the class from `Contact` to `Lead` and add, remove and rename a few properties.
+The rename of the class is something that can be done and will be explored in this example. We will rename the class from `Contact` to `Lead` and add, remove and rename a few properties.
 
 When creating and configuring the _StorageManager_ you can provide the mapping that needs to be performed to the `EmbeddedStorageFoundation`.
 
@@ -88,28 +88,29 @@ When creating and configuring the _StorageManager_ you can provide the mapping t
 
         }
     }
-``` 
+```
 
 In this code snippet, we create the Foundation and provide it with a custom `PersistenceRefactoringMappingProvider` that specifies the old and new class names within the code.
 
 The custom class implements the method `provideRefactoringMapping()` where we prepare a MicroStream Map that indicates the old and new name (here from _Contact_ to _Lead_)
 
-We don't specify the mappings for the properties in this case, as the automatic mapping does a good job in this case.  You can specify the mappings for properties also, like
+We don't specify the mappings for the properties in this case, as the automatic mapping does a good job in this case. You can specify the mappings for properties also, like
 
 ```
 be.rubus.microstream.demo.mapping.automatic.Contact#name;be.rubus.microstream.demo.mapping.automatic.Lead#contactName
 ```
 
-This is an example of a CSV file that also can be used and is recommended when you have multiple mappings to specify. It shows the format for indicating properties.  
+This is an example of a CSV file that also can be used and is recommended when you have multiple mappings to specify. It shows the format for indicating properties using the `#` sign.  
 If you have only a value in the _first_ column, this means that the property is deleted. A value in the _second_ column only denotes a new property.
 
 ```
 foundation.onConnectionFoundation(f -> f.setRefactoringMappingProvider(Persistence.RefactoringMapping(Paths.get("refactorings.csv"))));
 ```
 
-Just as in the automatic example, the changes are initially only in memory, the storage is still holding the data in the `Contact` structure.  You can use the Eager Storer to store all instances and data o the List in the new format.
 
-If you run the example, you will also experience that MicroStream constructs the Java instances using a very-low level approach. It does not use the classic instantiations to avoid Security vulnerabilities that exist in the standard Java Serialization approach.
+Just as in the automatic example, the changes are initially only in memory, the storage is still holding the data in the `Contact` structure.  You can use the Eager Storer to store all instances and data of the List in the new format.
+
+If you run the example, you will also see evidence that MicroStream constructs the Java instances using a very-low level approach. It does not use the classic instantiations to avoid Security vulnerabilities that exist in the standard Java Serialization approach.
 
 In the `Lead` class, we have the assignment of a _default_ country value, but as you see in the printout of the program, all properties have the value _null_.
 
@@ -117,18 +118,18 @@ In the `Lead` class, we have the assignment of a _default_ country value, but as
 private Country country = Country.DEFAULT;
 ```
 
-Be aware if you perform mappings that for new properties they are not _initialised_ as expected based on the java code.  Primitive types have their default (0 for int, false for boolean, etc ...) and instances are null, always.
+Be aware if you perform mappings that for new properties they are not _initialised_ as expected based on the java code.  Primitive types have their default value (0 for int, false for boolean, etc ...) and instances are null, always.
 
-You can play with the example by first running the `Contacts` program in the _old_ module and then the `ShowLeads` program in the _new_ module and see how the data is changed based on the log output information.
+You can play with the example by first running the `Contacts` program in the _old_ module and then the `Leads` program in the _new_ module and see how the data is changed based on the log output information.
 
 ## Complex refactoring
 
-Complex refactorings as indicated by the image earlier on where we also create an `Address` and `Country` instance, require the use of a _Legacy Type Handler_, not a simple mapping. The handler can based on the structure of the old class (using primitives and pointers) create an instance of the new class.
+Complex refactorings, as indicated by the image earlier on where we also create an `Address` and `Country` instance, require the use of a _Legacy Type Handler_, not a simple mapping. The handler can based on the structure of the old class (using primitives and pointers), create an instance of the new class(es).
 
 This handler cannot handle a renamed class, that needs to be performed separately, but a handler can perform the creation of `Address` and `Country`.
 
-The Handler will need to manipulate the old structure on the byte level, so this solution can become rather complex and difficult. It might require MicroStream Experts to help you create such a _Legacy Type Handler_.
+The _Handler_ will need to manipulate the old structure on the byte level, so this solution can become rather complex and difficult. It might require MicroStream Experts to help you create such a _Legacy Type Handler_.
 
-The example is relatively simple since our old class only contains String references and this handler is relatively easy to write.
+The example is relatively simple since our old class only contains String references and so this handler is relatively easy to write.
 
-Have a look at the `LeadLegacyHandler` class and run the `Leads` program in the _old_ module and then the `ShowLeads` in the _new_ module.
+Have a look at the `LeadLegacyHandler` class and run the `OldLeadsprogram` program in the _old_ module and then the `NewLeadsProgram` in the _new_ module.
