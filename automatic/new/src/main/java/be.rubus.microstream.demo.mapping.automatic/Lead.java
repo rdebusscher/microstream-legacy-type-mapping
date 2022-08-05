@@ -49,9 +49,9 @@ public class Lead {
     @Override
     public String toString() {
         return new StringJoiner(", ", Lead.class.getSimpleName() + "[", "]")
-                .add("name='" + contactName + "'")
-                .add("quality=" + quality)
                 .add("email='" + email + "'")
+                .add("contactName='" + contactName + "'")
+                .add("quality=" + quality)
                 .add("note='" + note + "'")
                 .toString();
     }
