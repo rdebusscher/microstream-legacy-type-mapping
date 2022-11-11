@@ -19,6 +19,7 @@ public class OldLeadsProgram {
                 storageManager.setRoot(root);
                 storageManager.storeRoot();
 
+                System.out.println("Adding some default leads");
                 initLeads(root);
             }
 

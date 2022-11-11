@@ -26,7 +26,7 @@ With the class `OldLeadsProgram` you can fill your data target with a few entrie
 
 In a second version of the program, you realise
 
-- The field _reference_ was not really useful as people use _note- for this anyway.
+- The field _reference_ was not really useful as people use _note_ for this anyway.
 - You rename the property _name_ to _contactName_
 - You reorder the fields since it makes more sense that the _email_ field is the first (identification of the instance).
 

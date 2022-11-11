@@ -18,6 +18,7 @@ public class Contacts {
                 storageManager.setRoot(root);
                 storageManager.storeRoot();
 
+                System.out.println("Adding default contacts");
                 initContacts(root);
             }
 

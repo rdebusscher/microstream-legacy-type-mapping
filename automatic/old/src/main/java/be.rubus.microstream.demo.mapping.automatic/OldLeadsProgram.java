@@ -18,7 +18,10 @@ public class OldLeadsProgram {
                 storageManager.setRoot(root);
                 storageManager.storeRoot();
 
+                System.out.println("Adding some Leads");
                 initLeads(root);
+                storageManager.store(root.getLeads());
+
             }
 
             System.out.println("Contents of the storage - Old Program");
